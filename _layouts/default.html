@@ -1,17 +1,22 @@
 <!doctype html>
 <html lang="{{ page.lang }}">
 <head>
-  {% include meta.html %}
-  {% include styles.html %}
-  {%- if jekyll.environment == 'production' -%}
-  {%- include analytics/google-analytics.html -%}
-  {%- endif -%}
-</head>
+  <meta charset="UTF-8">
+  <meta name="description" content="Gabriel Jones Web Blog">
+  <meta name="keywords" content="Gabriel Jones Web Blog">
+  <meta name="author" content="John Doe">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="
+  https://cdn.jsdelivr.net/npm/bootstrap-italia@2.14.0/dist/js/bootstrap-italia.min.js
+  "></script>
+  <link href="
+  https://cdn.jsdelivr.net/npm/bootstrap-italia@2.14.0/dist/css/bootstrap-italia.min.css
+  " rel="stylesheet">
+  <link href="
+  /assets/style.css
+  " rel="stylesheet"></head>
 <body>
   {%- include header/header.html -%}
   {{ content }}
-  {%- include footer/footer.html -%}
-  {%- include cookiebar.html -%}
-  {%- include scripts.html -%}
 </body>
 </html>
