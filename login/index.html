@@ -3,56 +3,74 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Login</title>
+  <title>Login con Netlify Identity</title>
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
   <style>
     body {
       font-family: Arial, sans-serif;
       background-color: #f3f4f6;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
       height: 100vh;
-    }
-    .login-container {
-      background-color: white;
-      padding: 2rem;
-      border-radius: 8px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-      width: 300px;
-    }
-    .login-container h2 {
       text-align: center;
-      margin-bottom: 1rem;
     }
-    .login-container input {
-      width: 100%;
-      padding: 0.5rem;
-      margin-bottom: 1rem;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-    }
-    .login-container button {
-      width: 100%;
-      padding: 0.5rem;
+
+    button {
+      margin: 0.5rem;
+      padding: 0.5rem 1rem;
       background-color: #10b981;
       color: white;
       border: none;
       border-radius: 4px;
       cursor: pointer;
     }
-    .login-container button:hover {
+
+    button:hover {
       background-color: #059669;
+    }
+
+    #user-info {
+      margin-top: 1rem;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
-  <div class="login-container">
-    <h2>Accedi</h2>
-    <form action="/home.html" method="POST">
-      <input type="email" name="email" placeholder="Email" required />
-      <input type="password" name="password" placeholder="Password" required />
-      <button type="submit">Login</button>
-    </form>
-  </div>
+  <h1>Login con Netlify Identity</h1>
+
+  <button onclick="netlifyIdentity.open('login')">Login</button>
+  <button onclick="netlifyIdentity.open('signup')">Registrati</button>
+  <button onclick="netlifyIdentity.logout()">Logout</button>
+
+  <div id="user-info"></div>
+
+  <script>
+    netlifyIdentity.on('init', user => {
+      updateUserUI(user);
+    });
+
+    netlifyIdentity.on('login', user => {
+      updateUserUI(user);
+      netlifyIdentity.close();
+    });
+
+    netlifyIdentity.on('logout', () => {
+      updateUserUI(null);
+    });
+
+    function updateUserUI(user) {
+      const userInfo = document.getElementById('user-info');
+      if (user) {
+        userInfo.textContent = `Ciao, ${user.user_metadata.full_name || user.email}`;
+      } else {
+        userInfo.textContent = 'Non sei loggato.';
+      }
+    }
+
+    // Inizializza il widget al caricamento
+    netlifyIdentity.init();
+  </script>
 </body>
 </html>
