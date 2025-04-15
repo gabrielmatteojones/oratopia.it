@@ -1,129 +1,146 @@
 <!DOCTYPE html>
-<html lang="it">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Login & Register - Netlify Identity</title>
-  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <title>Pagina Protetta</title>
   <style>
-    * {
-      box-sizing: border-box;
-    }
     body {
-      margin: 0;
-      font-family: 'Inter', sans-serif;
-      background: linear-gradient(to right, #667eea, #764ba2);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f0f2f0, #e0e0e0); /* Sfondo sfumato */
       display: flex;
-      align-items: center;
       justify-content: center;
-      height: 100vh;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
     }
-    .auth-container {
-      background: white;
-      padding: 2rem;
-      border-radius: 1rem;
-      box-shadow: 0 20px 30px rgba(0, 0, 0, 0.1);
-      width: 100%;
-      max-width: 400px;
+
+    .auth-container, .protected-container {
+      background-color: #fff;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15); /* Ombra più pronunciata */
       text-align: center;
-      transition: all 0.3s ease-in-out;
+      width: 400px; /* Larghezza fissa per un aspetto più controllato */
+      max-width: 90%; /* Adattabilità su schermi più piccoli */
     }
-    h2 {
-      margin-bottom: 1rem;
+
+    h1, h2 {
       color: #333;
+      margin-bottom: 30px;
+      font-weight: 300; /* Peso del font più leggero */
     }
-    input {
-      width: 100%;
-      padding: 0.75rem;
-      margin-bottom: 1rem;
-      border: 1px solid #ddd;
-      border-radius: 0.5rem;
-      font-size: 1rem;
-    }
-    button {
-      width: 100%;
-      padding: 0.75rem;
-      background: #667eea;
-      border: none;
-      border-radius: 0.5rem;
-      color: white;
-      font-size: 1rem;
-      font-weight: bold;
-      cursor: pointer;
-      transition: background 0.2s ease-in-out;
-    }
-    button:hover {
-      background: #5a67d8;
-    }
-    .toggle-link {
-      margin-top: 1rem;
-      font-size: 0.9rem;
+
+    label {
+      display: block;
+      margin-bottom: 10px;
       color: #555;
-      cursor: pointer;
-      text-decoration: underline;
+      text-align: left;
+      font-weight: 400;
     }
-    #user-info {
-      margin-top: 1rem;
-      font-weight: 600;
+
+    input[type="text"], input[type="password"] {
+      width: calc(100% - 24px);
+      padding: 12px;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      box-sizing: border-box;
+      font-size: 16px;
+    }
+
+    button {
+      background-color: #007bff;
+      color: white;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 18px;
+      transition: background-color 0.3s ease, transform 0.2s ease-in-out; /* Aggiunta transizione */
+    }
+
+    button:hover {
+      background-color: #0056b3;
+      transform: scale(1.05); /* Leggero effetto di "sollevamento" al hover */
+    }
+
+    #message {
+      color: #dc3545; /* Rosso più vivace per gli errori */
+      margin-top: 15px;
+      font-size: 16px;
+    }
+
+    .protected-content-inner {
+      padding: 30px 0;
+    }
+
+    .protected-content-inner p {
+      color: #333;
+      font-size: 18px;
+      line-height: 1.6;
+      margin-bottom: 25px;
+    }
+
+    .logout-button {
+      background-color: #6c757d; /* Grigio per il logout */
+    }
+
+    .logout-button:hover {
+      background-color: #545b62;
     }
   </style>
 </head>
 <body>
-  <div class="auth-container" id="auth-box">
-    <h2 id="form-title">Login</h2>
-    <input type="email" id="email" placeholder="Email" required />
-    <input type="password" id="password" placeholder="Password" required />
-    <button onclick="handleAuth()">Accedi</button>
-    <div class="toggle-link" onclick="toggleForm()">Non hai un account? Registrati</div>
-    <div id="user-info"></div>
-    <button id="logout-btn" onclick="netlifyIdentity.logout()" style="display: none; margin-top: 1rem; background: #e53e3e;">Logout</button>
+  <div id="auth-form" class="auth-container">
+    <h2>Accedi</h2>
+    <label for="username">Nome Utente:</label>
+    <input type="text" id="username" placeholder="Il tuo nome utente"><br>
+    <label for="password">Password:</label>
+    <input type="password" id="password" placeholder="La tua password"><br>
+    <button onclick="authenticate()">Accedi</button>
+    <p id="message"></p>
+  </div>
+  <div id="protected-content" class="protected-container" style="display:none;">
+    <div class="protected-content-inner">
+      <h1>Contenuto Protetto</h1>
+      <p>Benvenuto! Questo è il contenuto esclusivo che è accessibile solo agli utenti autenticati.</p>
+      <p>Sentiti libero di esplorare e goderti le informazioni riservate.</p>
+      <button onclick="logout()" class="logout-button">Logout</button>
+    </div>
   </div>
 
   <script>
-    let isLogin = true;
-
-    netlifyIdentity.on('init', user => updateUI(user));
-    netlifyIdentity.on('login', user => {
-      updateUI(user);
-      netlifyIdentity.close();
-    });
-    netlifyIdentity.on('logout', () => updateUI(null));
-
-    netlifyIdentity.init();
-
-    function handleAuth() {
-      const email = document.getElementById('email').value;
+    async function authenticate() {
+      const username = document.getElementById('username').value;
       const password = document.getElementById('password').value;
+      const messageElement = document.getElementById('message');
+      const authForm = document.getElementById('auth-form');
+      const protectedContent = document.getElementById('protected-content');
 
-      if (isLogin) {
-        netlifyIdentity.login(email, password, true).catch(err => alert("Errore di login: " + err.message));
+      const response = await fetch('/.netlify/functions/auth', {
+        method: 'POST',
+        body: JSON.stringify({ username, password }),
+      });
+
+      const data = await response.json();
+
+      if (data.authenticated) {
+        authForm.style.display = 'none';
+        protectedContent.style.display = 'block';
+        localStorage.setItem('isAuthenticated', 'true');
       } else {
-        netlifyIdentity.signup(email, password).catch(err => alert("Errore di registrazione: " + err.message));
+        messageElement.textContent = data.message;
       }
     }
 
-    function toggleForm() {
-      isLogin = !isLogin;
-      document.getElementById('form-title').textContent = isLogin ? 'Login' : 'Registrazione';
-      document.querySelector('button').textContent = isLogin ? 'Accedi' : 'Registrati';
-      document.querySelector('.toggle-link').textContent = isLogin
-        ? 'Non hai un account? Registrati'
-        : 'Hai già un account? Vai al login';
+    function logout() {
+      document.getElementById('auth-form').style.display = 'block';
+      document.getElementById('protected-content').style.display = 'none';
+      localStorage.removeItem('isAuthenticated');
     }
 
-    function updateUI(user) {
-      const info = document.getElementById('user-info');
-      const logoutBtn = document.getElementById('logout-btn');
-      const authBox = document.getElementById('auth-box');
-
-      if (user) {
-        info.textContent = `Ciao, ${user.user_metadata.full_name || user.email}`;
-        logoutBtn.style.display = 'block';
-      } else {
-        info.textContent = '';
-        logoutBtn.style.display = 'none';
-      }
+    if (localStorage.getItem('isAuthenticated') === 'true') {
+      document.getElementById('auth-form').style.display = 'none';
+      document.getElementById('protected-content').style.display = 'block';
     }
   </script>
 </body>
