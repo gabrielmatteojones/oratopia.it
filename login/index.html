@@ -3,74 +3,128 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Login con Netlify Identity</title>
+  <title>Login & Register - Netlify Identity</title>
   <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <style>
+    * {
+      box-sizing: border-box;
+    }
     body {
-      font-family: Arial, sans-serif;
-      background-color: #f3f4f6;
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(to right, #667eea, #764ba2);
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
       height: 100vh;
+    }
+    .auth-container {
+      background: white;
+      padding: 2rem;
+      border-radius: 1rem;
+      box-shadow: 0 20px 30px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 400px;
       text-align: center;
+      transition: all 0.3s ease-in-out;
     }
-
+    h2 {
+      margin-bottom: 1rem;
+      color: #333;
+    }
+    input {
+      width: 100%;
+      padding: 0.75rem;
+      margin-bottom: 1rem;
+      border: 1px solid #ddd;
+      border-radius: 0.5rem;
+      font-size: 1rem;
+    }
     button {
-      margin: 0.5rem;
-      padding: 0.5rem 1rem;
-      background-color: #10b981;
-      color: white;
+      width: 100%;
+      padding: 0.75rem;
+      background: #667eea;
       border: none;
-      border-radius: 4px;
+      border-radius: 0.5rem;
+      color: white;
+      font-size: 1rem;
+      font-weight: bold;
       cursor: pointer;
+      transition: background 0.2s ease-in-out;
     }
-
     button:hover {
-      background-color: #059669;
+      background: #5a67d8;
     }
-
+    .toggle-link {
+      margin-top: 1rem;
+      font-size: 0.9rem;
+      color: #555;
+      cursor: pointer;
+      text-decoration: underline;
+    }
     #user-info {
       margin-top: 1rem;
-      font-weight: bold;
+      font-weight: 600;
     }
   </style>
 </head>
 <body>
-  <h1>Login con Netlify Identity</h1>
-
-  <button onclick="netlifyIdentity.open('login')">Login</button>
-  <button onclick="netlifyIdentity.open('signup')">Registrati</button>
-  <button onclick="netlifyIdentity.logout()">Logout</button>
-
-  <div id="user-info"></div>
+  <div class="auth-container" id="auth-box">
+    <h2 id="form-title">Login</h2>
+    <input type="email" id="email" placeholder="Email" required />
+    <input type="password" id="password" placeholder="Password" required />
+    <button onclick="handleAuth()">Accedi</button>
+    <div class="toggle-link" onclick="toggleForm()">Non hai un account? Registrati</div>
+    <div id="user-info"></div>
+    <button id="logout-btn" onclick="netlifyIdentity.logout()" style="display: none; margin-top: 1rem; background: #e53e3e;">Logout</button>
+  </div>
 
   <script>
-    netlifyIdentity.on('init', user => {
-      updateUserUI(user);
-    });
+    let isLogin = true;
 
+    netlifyIdentity.on('init', user => updateUI(user));
     netlifyIdentity.on('login', user => {
-      updateUserUI(user);
+      updateUI(user);
       netlifyIdentity.close();
     });
+    netlifyIdentity.on('logout', () => updateUI(null));
 
-    netlifyIdentity.on('logout', () => {
-      updateUserUI(null);
-    });
+    netlifyIdentity.init();
 
-    function updateUserUI(user) {
-      const userInfo = document.getElementById('user-info');
-      if (user) {
-        userInfo.textContent = `Ciao, ${user.user_metadata.full_name || user.email}`;
+    function handleAuth() {
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      if (isLogin) {
+        netlifyIdentity.login(email, password, true).catch(err => alert("Errore di login: " + err.message));
       } else {
-        userInfo.textContent = 'Non sei loggato.';
+        netlifyIdentity.signup(email, password).catch(err => alert("Errore di registrazione: " + err.message));
       }
     }
 
-    // Inizializza il widget al caricamento
-    netlifyIdentity.init();
+    function toggleForm() {
+      isLogin = !isLogin;
+      document.getElementById('form-title').textContent = isLogin ? 'Login' : 'Registrazione';
+      document.querySelector('button').textContent = isLogin ? 'Accedi' : 'Registrati';
+      document.querySelector('.toggle-link').textContent = isLogin
+        ? 'Non hai un account? Registrati'
+        : 'Hai già un account? Vai al login';
+    }
+
+    function updateUI(user) {
+      const info = document.getElementById('user-info');
+      const logoutBtn = document.getElementById('logout-btn');
+      const authBox = document.getElementById('auth-box');
+
+      if (user) {
+        info.textContent = `Ciao, ${user.user_metadata.full_name || user.email}`;
+        logoutBtn.style.display = 'block';
+      } else {
+        info.textContent = '';
+        logoutBtn.style.display = 'none';
+      }
+    }
   </script>
 </body>
 </html>
