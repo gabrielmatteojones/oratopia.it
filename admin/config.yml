@@ -1,0 +1,20 @@
+backend:
+  name: git-gateway
+  branch: main # cambia se usi "master"
+
+media_folder: "assets/uploads"      # dove si salvano le immagini
+public_folder: "/assets/uploads"    # dove vengono servite
+
+collections:
+  - name: "posts"
+    label: "Post"
+    folder: "_posts"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    extension: "md"
+    format: "yaml-frontmatter"  # ⬅️ Questo è il punto chiave per Jekyll!
+    fields:
+      - { label: "Titolo", name: "title", widget: "string" }
+      - { label: "Data", name: "date", widget: "datetime" }
+      - { label: "Categorie", name: "categories", widget: "list", default: ["blog"] }
+      - { label: "Contenuto", name: "body", widget: "markdown" }
