@@ -12,11 +12,14 @@ collections:
     create: true
     slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
     extension: "md"
-    format: "yaml-frontmatter"  # ⬅️ Importantissimo per Jekyll
+    format: "yaml-frontmatter"
 
     fields:
-      - { label: "Layout", name: "layout", widget: "hidden", default: "post" }  # 👈 ECCOLO!
+      - { label: "Layout", name: "layout", widget: "hidden", default: "post" }
       - { label: "Titolo", name: "title", widget: "string" }
+      - { label: "Lingua", name: "lang", widget: "select", options: ["it", "en"], default: "it" }
+      - { label: "Riferimento (ref)", name: "ref", widget: "string" }
+      - { label: "Categorie", name: "categories", widget: "list", default: ["categoria1"] }
+      - { label: "Tag", name: "tags", widget: "list", default: ["tag1", "tag2", "tag3"] }
       - { label: "Data", name: "date", widget: "datetime" }
-      - { label: "Categorie", name: "categories", widget: "list", default: ["blog"] }
       - { label: "Contenuto", name: "body", widget: "markdown" }
