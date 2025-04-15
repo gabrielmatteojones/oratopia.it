@@ -1,12 +1,6 @@
   <script>
-    window.onload = function () {
-      const loggedIn = localStorage.getItem("loggedIn");
-
-      // Controllo corretto
-      if (loggedIn !== "true") {
-        // Non loggato → reindirizza
-        window.location.href = "/login.html";
-      }
-    };
+netlifyIdentity.on("login", user => {
+  window.location.href = "/pagina-protetta.html";
+});
   </script>
     <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
