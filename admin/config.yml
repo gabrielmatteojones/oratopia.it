@@ -2,8 +2,8 @@ backend:
   name: git-gateway
   branch: dependabot/bundler/addressable-2.8.1  # o master, se usi quello
 
-media_folder: "assets/uploads"
-public_folder: "/assets/uploads"
+media_folder: "assets"
+public_folder: "/assets/"
 
 customStyles: /admin/custom.css
 
