@@ -1,16 +1,74 @@
-/* Cambia il font globale */
-body {
-  font-family: 'Comic Sans MS', cursive, sans-serif !important;
+/* Contenitore principale */
+.SplitPane {
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+  gap: 20px;
 }
 
-/* Cambia colore intestazione */
-.css-y7r3-AppHeader {
-  background-color: #111827 !important;
-  color: white !important;
+/* Pannello sinistro */
+.Pane1 {
+  background: white;
+  padding: 24px;
+  border-right: 1px solid #e0e0e0;
+  overflow-y: auto;
 }
 
-/* Pulsante di pubblicazione */
-.css-o6hjv6-StyledDropdownButton-button-default-caret-caretDown-DropdownButton-noOverflow-PublishButton {
-  background-color: #10b981 !important;
-  color: white !important;
+/* Etichette */
+.css-pcief1-FieldLabel-fieldLabel {
+  font-weight: 600;
+  margin-bottom: 6px;
+  display: inline-block;
+  color: #495057;
+}
+
+/* Input */
+input[type="text"] {
+  width: 100%;
+  padding: 10px 12px;
+  font-size: 15px;
+  border: 1px solid #ced4da;
+  border-radius: 6px;
+  margin-bottom: 16px;
+  background-color: #ffffff;
+}
+
+/* Select-like */
+.css-n3v41w-control {
+  border-radius: 6px;
+  border: 1px solid #ced4da;
+  padding: 8px 10px;
+}
+
+/* Editor toolbar */
+.css-13xgqvl-EditorControlBar {
+  border-bottom: 1px solid #e9ecef;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+}
+
+/* Editor area */
+.cms-editor-visual {
+  background: #fdfdfd;
+  border: 1px solid #ced4da;
+  border-radius: 6px;
+  padding: 12px;
+  min-height: 200px;
+}
+
+/* Pulsanti della toolbar */
+.css-e55nd1-StyledToolbarButton-button {
+  background: #ffffff;
+  border: 1px solid #d1d1d1;
+  margin-right: 6px;
+  border-radius: 4px;
+  padding: 4px 8px;
+  transition: all 0.2s ease;
+}
+
+.css-e55nd1-StyledToolbarButton-button:hover {
+  background: #f1f3f5;
+  border-color: #adb5bd;
 }
