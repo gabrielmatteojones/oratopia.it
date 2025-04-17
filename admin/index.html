@@ -4,47 +4,27 @@
     <meta charset="utf-8" />
     <title>Area Amministrazione | Netlify CMS</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-    <!-- Netlify Identity Widget -->
-    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
-
-    <!-- Bootstrap Italia -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-italia@2.14.0/dist/css/bootstrap-italia.min.css" rel="stylesheet">
-
-    <!-- CSS Comune di Bolzano -->
-    <link rel="stylesheet" type="text/css" href="https://opencity.comune.bolzano.it/var/bolzano_opencity/cache/public/stylesheets/57b177e4d4d0d2d087c924e3d041d7cb_1690206125_all.css" />
-
-    <link rel="stylesheet" type="text/css" href="/admin/custom.css" />
-<style>
-      body {
-        background-color: #f7f9fc;
-        font-family: "Titillium Web", sans-serif;
-      }
-
-      .admin-container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        height: 100vh;
-        text-align: center;
-        padding: 2rem;
-      }
-
-      .admin-container h1 {
-        font-size: 2rem;
-        margin-bottom: 1rem;
-      }
-
-      .admin-container .spinner-border {
-        margin-top: 2rem;
-      }
-    </style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
   </head>
 
   <body>
 
+<!-- As a link -->
+<nav class="navbar bg-body-tertiary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">Navbar</a>
+  </div>
+</nav>
 
+<!-- As a heading -->
+<nav class="navbar bg-body-tertiary">
+  <div class="container-fluid">
+    <span class="navbar-brand mb-0 h1">Oratopia Admin</span>
+  </div>
+</nav>
+
+
+    
     <!-- Netlify Identity Init -->
     <script>
       if (window.netlifyIdentity) {
@@ -58,7 +38,6 @@
       }
     </script>
 
-    <!-- Netlify CMS App -->
     <script src="https://unpkg.com/netlify-cms@^2.0.0/dist/netlify-cms.js"></script>
   </body>
 </html>
