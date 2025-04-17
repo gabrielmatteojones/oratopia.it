@@ -5,6 +5,8 @@ backend:
 media_folder: "assets/uploads"
 public_folder: "/assets/uploads"
 
+customStyles: /admin/custom.css
+
 collections:
   - name: "posts"
     label: "Post"
