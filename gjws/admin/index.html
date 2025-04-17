@@ -1,22 +1,26 @@
-<!doctype html>
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <title>Admin</title>
-    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
-  </head>
-  <body>
-    <script>
-      if (window.netlifyIdentity) {
-        window.netlifyIdentity.on("init", (user) => {
-          if (!user) {
-            window.netlifyIdentity.on("login", () => {
-              document.location.href = "/admin/";
-            });
-          }
-        });
-      }
-    </script>
-    <script src="https://unpkg.com/netlify-cms@^2.0.0/dist/netlify-cms.js"></script>
-  </body>
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>Oratopia Admin</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
+</head>
+<body>
+    <h1>Oratopia Admin in iFrame</h1>
+  <nav class="navbar bg-body-tertiary">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="https://oratopia.it/">
+        <img src="https://gabrieljones.it/assets/logo.png" alt="Logo" width="40" height="40" class="d-inline-block align-text-top">
+        Gabriel Jones Web Services
+      </a>
+    </div>
+  </nav>
+    
+    <iframe 
+    src="https://oratopia-admin.netlify.app/admin/#/collections/posts" 
+    width="100%" 
+    height="800" 
+    style="border:0px solid #ccc;">
+  </iframe>
+</body>
 </html>
