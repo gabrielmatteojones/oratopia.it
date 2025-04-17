@@ -1,0 +1,30 @@
+collections:
+  - name: "posts"
+    label: "Post"
+    folder: "_posts"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    extension: "md"
+    format: "yaml-frontmatter"
+    fields:
+      - { label: "Layout", name: "layout", widget: "hidden", default: "post" }
+      - { label: "Titolo", name: "title", widget: "string" }
+      - { label: "Lingua", name: "lang", widget: "select", options: ["it", "en"], default: "it" }
+      - { label: "Riferimento (ref)", name: "ref", widget: "string" }
+      - { label: "Categorie", name: "categories", widget: "list", default: ["categoria1"] }
+      - { label: "Tag", name: "tags", widget: "list", default: ["tag1", "tag2", "tag3"] }
+      - { label: "Data", name: "date", widget: "datetime" }
+      - { label: "Contenuto", name: "body", widget: "markdown" }
+
+  - name: "pages"
+    label: "Pagine"
+    folder: "pages"
+    create: true
+    slug: "{{slug}}"
+    extension: "md"
+    format: "yaml-frontmatter"
+    fields:
+      - { label: "Layout", name: "layout", widget: "hidden", default: "page" }
+      - { label: "Titolo", name: "title", widget: "string" }
+      - { label: "Lingua", name: "lang", widget: "select", options: ["it", "en"], default: "it" }
+      - { label: "Contenuto", name: "body", widget: "markdown" }
