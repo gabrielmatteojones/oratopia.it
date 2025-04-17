@@ -1,146 +1,52 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Pagina Protetta</title>
+  <meta charset="UTF-8" />
+  <title>Genera Post Markdown</title>
   <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #f0f2f0, #e0e0e0); /* Sfondo sfumato */
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      margin: 0;
-    }
-
-    .auth-container, .protected-container {
-      background-color: #fff;
-      padding: 40px;
-      border-radius: 12px;
-      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15); /* Ombra più pronunciata */
-      text-align: center;
-      width: 400px; /* Larghezza fissa per un aspetto più controllato */
-      max-width: 90%; /* Adattabilità su schermi più piccoli */
-    }
-
-    h1, h2 {
-      color: #333;
-      margin-bottom: 30px;
-      font-weight: 300; /* Peso del font più leggero */
-    }
-
-    label {
-      display: block;
-      margin-bottom: 10px;
-      color: #555;
-      text-align: left;
-      font-weight: 400;
-    }
-
-    input[type="text"], input[type="password"] {
-      width: calc(100% - 24px);
-      padding: 12px;
-      margin-bottom: 20px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      box-sizing: border-box;
-      font-size: 16px;
-    }
-
-    button {
-      background-color: #007bff;
-      color: white;
-      padding: 12px 24px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 18px;
-      transition: background-color 0.3s ease, transform 0.2s ease-in-out; /* Aggiunta transizione */
-    }
-
-    button:hover {
-      background-color: #0056b3;
-      transform: scale(1.05); /* Leggero effetto di "sollevamento" al hover */
-    }
-
-    #message {
-      color: #dc3545; /* Rosso più vivace per gli errori */
-      margin-top: 15px;
-      font-size: 16px;
-    }
-
-    .protected-content-inner {
-      padding: 30px 0;
-    }
-
-    .protected-content-inner p {
-      color: #333;
-      font-size: 18px;
-      line-height: 1.6;
-      margin-bottom: 25px;
-    }
-
-    .logout-button {
-      background-color: #6c757d; /* Grigio per il logout */
-    }
-
-    .logout-button:hover {
-      background-color: #545b62;
-    }
+    body { font-family: sans-serif; margin: 2rem; }
+    textarea, input, button { width: 100%; margin: 0.5rem 0; padding: 0.5rem; }
+    label { font-weight: bold; }
   </style>
 </head>
 <body>
-  <div id="auth-form" class="auth-container">
-    <h2>Accedi</h2>
-    <label for="username">Nome Utente:</label>
-    <input type="text" id="username" placeholder="Il tuo nome utente"><br>
-    <label for="password">Password:</label>
-    <input type="password" id="password" placeholder="La tua password"><br>
-    <button onclick="authenticate()">Accedi</button>
-    <p id="message"></p>
-  </div>
-  <div id="protected-content" class="protected-container" style="display:none;">
-    <div class="protected-content-inner">
-      <h1>Contenuto Protetto</h1>
-      <p>Benvenuto! Questo è il contenuto esclusivo che è accessibile solo agli utenti autenticati.</p>
-      <p>Sentiti libero di esplorare e goderti le informazioni riservate.</p>
-      <button onclick="logout()" class="logout-button">Logout</button>
-    </div>
-  </div>
+  <h1>Crea un nuovo post</h1>
+
+  <label>Titolo</label>
+  <input type="text" id="title" placeholder="Titolo del post" />
+
+  <label>Categorie (separate da virgola)</label>
+  <input type="text" id="categories" placeholder="es: categoria1, categoria2" />
+
+  <label>Tag (separati da virgola)</label>
+  <input type="text" id="tags" placeholder="es: tag1, tag2, tag3" />
+
+  <label>Lingua</label>
+  <input type="text" id="lang" value="en" />
+
+  <label>Ref</label>
+  <input type="text" id="ref" placeholder="Riferimento interno" />
+
+  <label>Contenuto del post</label>
+  <textarea id="body" rows="10" placeholder="Scrivi qui il contenuto..."></textarea>
+
+  <button onclick="generaMarkdown()">Genera Markdown</button>
+
+  <h2>Output Markdown</h2>
+  <textarea id="output" rows="15" readonly></textarea>
 
   <script>
-    async function authenticate() {
-      const username = document.getElementById('username').value;
-      const password = document.getElementById('password').value;
-      const messageElement = document.getElementById('message');
-      const authForm = document.getElementById('auth-form');
-      const protectedContent = document.getElementById('protected-content');
+    function generaMarkdown() {
+      const title = document.getElementById('title').value;
+      const categories = document.getElementById('categories').value.split(',').map(c => c.trim());
+      const tags = document.getElementById('tags').value.split(',').map(t => t.trim());
+      const lang = document.getElementById('lang').value;
+      const ref = document.getElementById('ref').value;
+      const body = document.getElementById('body').value;
 
-      const response = await fetch('/.netlify/functions/auth', {
-        method: 'POST',
-        body: JSON.stringify({ username, password }),
-      });
+      const frontmatter = `---\nlayout: post\ntitle: ${title}\ncategories: [${categories.join(', ')}]\ntags: [${tags.join(', ')}]\nlang: ${lang}\nref: ${ref}\n---\n\n`;
 
-      const data = await response.json();
-
-      if (data.authenticated) {
-        authForm.style.display = 'none';
-        protectedContent.style.display = 'block';
-        localStorage.setItem('isAuthenticated', 'true');
-      } else {
-        messageElement.textContent = data.message;
-      }
-    }
-
-    function logout() {
-      document.getElementById('auth-form').style.display = 'block';
-      document.getElementById('protected-content').style.display = 'none';
-      localStorage.removeItem('isAuthenticated');
-    }
-
-    if (localStorage.getItem('isAuthenticated') === 'true') {
-      document.getElementById('auth-form').style.display = 'none';
-      document.getElementById('protected-content').style.display = 'block';
+      document.getElementById('output').value = frontmatter + body;
     }
   </script>
 </body>
