@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Protetta</title>
+  <style>
+    /* Aggiungi il tuo CSS personalizzato qui */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f9;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    header {
+      background-color: #333;
+      color: white;
+      padding: 10px 0;
+      text-align: center;
+    }
+    .dashboard {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+    }
+    .dashboard > div {
+      width: 30%;
+      padding: 20px;
+      background-color: white;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    h2 {
+      margin-top: 0;
+    }
+    .list {
+      list-style-type: none;
+      padding: 0;
+    }
+    .list li {
+      padding: 8px 0;
+      border-bottom: 1px solid #ddd;
+    }
+    .btn {
+      background-color: #333;
+      color: white;
+      padding: 10px;
+      border: none;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+    .btn:hover {
+      background-color: #555;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Dashboard Protetta</h1>
+  </header>
+
+  <div class="container">
+    <div id="authStatus"></div>
+    <div class="dashboard" style="display: none;" id="dashboardContent">
+      <div>
+        <h2>Utenti</h2>
+        <ul id="userList" class="list">
+          <!-- Gli utenti verranno caricati qui -->
+        </ul>
+      </div>
+      <div>
+        <h2>Post</h2>
+        <ul id="postList" class="list">
+          <!-- I post verranno caricati qui -->
+        </ul>
+      </div>
+      <div>
+        <h2>Pagine</h2>
+        <ul id="pageList" class="list">
+          <!-- Le pagine verranno caricate qui -->
+        </ul>
+      </div>
+    </div>
+    <button class="btn" id="logoutButton" style="display: none;">Logout</button>
+  </div>
+
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  <script>
+    // Avvia Netlify Identity
+    netlifyIdentity.init();
+
+    // Funzione per caricare dati da Netlify Function
+    async function loadData() {
+      const response = await fetch('/.netlify/functions/getData');
+      const data = await response.json();
+      if (response.ok) {
+        // Carica gli utenti
+        const userList = document.getElementById('userList');
+        data.users.forEach(user => {
+          const li = document.createElement('li');
+          li.textContent = `${user.name} (${user.email})`;
+          userList.appendChild(li);
+        });
+
+        // Carica i post
+        const postList = document.getElementById('postList');
+        data.posts.forEach(post => {
+          const li = document.createElement('li');
+          li.textContent = post.title;
+          postList.appendChild(li);
+        });
+
+        // Carica le pagine
+        const pageList = document.getElementById('pageList');
+        data.pages.forEach(page => {
+          const li = document.createElement('li');
+          li.textContent = page.title;
+          pageList.appendChild(li);
+        });
+      } else {
+        console.error('Errore nel recuperare i dati');
+      }
+    }
+
+    // Funzione per aggiornare lo stato dell'autenticazione
+    function updateAuthStatus() {
+      const authStatus = document.getElementById('authStatus');
+      const logoutButton = document.getElementById('logoutButton');
+      const dashboardContent = document.getElementById('dashboardContent');
+
+      if (netlifyIdentity.currentUser()) {
+        authStatus.innerHTML = `<p>Benvenuto, ${netlifyIdentity.currentUser().user_metadata.full_name}!</p>`;
+        dashboardContent.style.display = 'flex';
+        logoutButton.style.display = 'inline-block';
+        loadData();  // Carica i dati
+      } else {
+        authStatus.innerHTML = '<p>Non sei autenticato. Effettua il login.</p>';
+        dashboardContent.style.display = 'none';
+        logoutButton.style.display = 'none';
+      }
+    }
+
+    // Gestisci il logout
+    document.getElementById('logoutButton').addEventListener('click', function() {
+      netlifyIdentity.logout();
+      updateAuthStatus();
+    });
+
+    // Gestisci gli eventi di login e logout
+    netlifyIdentity.on('login', function() {
+      updateAuthStatus();
+    });
+    netlifyIdentity.on('logout', function() {
+      updateAuthStatus();
+    });
+
+    // Aggiorna lo stato dell'autenticazione all'avvio
+    updateAuthStatus();
+  </script>
+</body>
+</html>
